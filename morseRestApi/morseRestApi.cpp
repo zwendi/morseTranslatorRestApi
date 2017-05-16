@@ -7,50 +7,47 @@
 #include "morseTranslator.h"
 #include "requestHandler.h"
 
+
 using namespace std;
 using namespace web::http::experimental::listener;
 
+//use string instead wstring here enable us to use remove method from standard
+const string stopFileName = ".\\stop.txt";
+const wstring defaultPort = L"8080";
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	
-	http_listener listener(L"http://localhost/demo");
+	//For this example, a simple console is used to to get the port number
+	wcout << L"Please enter the port number you want the program listen on locally.";
+	wstring address = L"http://localhost/";
+	wstring port;
+	wcin >> port;
+	if (port.size() < 1)
+		port = defaultPort;     // default port number
+
+	http_listener listener(address+port);
 	requestHandler handler;
 	listener.support(methods::POST, [&](http_request req){
 		handler.handle_post(req);
 	});
 	listener.support(methods::OPTIONS, [&](http_request req){
+		//This is for the browser to send the options request if we want to build a local mock up
 		handler.handle_options(req);
 	});
+	bool stop = false;
 
-	while (true) {
+	while (!stop) {
 		listener.open().wait();
+		if (ifstream(stopFileName))
+		{
+			stop = true;
+			remove(stopFileName.c_str());
+		}
 	}
 
-	std::cout << U("Bye Bye.") << endl;
+	std::wcout << L"Bye Bye." << endl;
 	listener.close();
 
-	/*
-	wstring  test = L"SOS HELP ME";
-	wstring errStr = L"";
-
-	wstring morseCode = translator.encodeEnglish(test, errStr);
-	wcout << morseCode<<endl;
-
-
-	test = L"";
-	errStr = L"";
-
-	 morseCode = translator.encodeEnglish(test, errStr);
-
-	wcout << morseCode;
-	test = L"... --- ... ";
-	morseCode = translator.decodeMorse(test, errStr);
-
-	*/
-	/*
-	*  question: Do we need to consider white space between words?  If so how should we represent in morse code? Using 3 spaces?
-	*/
 	return 0;
 }
 
