@@ -83,7 +83,6 @@ void morseTranslator::privateData::initialized()
 	addPair(L'8', L"---..");
 	addPair(L'9', L"----.");
 	addPair(L'0', L"-----");
-	addPair(L' ', L"   ");  
 }
 
 /*
@@ -94,34 +93,46 @@ void morseTranslator::privateData::initialized()
 void morseTranslator::privateData::addPair(wchar_t character, wstring morse)
 {
 	engMorseMap.insert(make_pair(character, morse));
+	engMorseMap.insert(make_pair(tolower(character), morse));
 	morseEngMap.insert(make_pair(morse, character));
 }
 
 
-wstring morseTranslator::encodeEnglish(wstring& englishStr, wstring& errStr)
+wstring morseTranslator::encodeEnglish(wstring& englishStr)
 {
 	wstring result = L"";
 	auto endItr = pData->engMorseMap.end();
+
+	//use this to handle special english string " "
+	bool useTwoSpace = true;
+	
 	for (auto& character : englishStr)
 	{
-		auto itr = pData->engMorseMap.find(character);
-		if (itr != endItr){
-			result += itr->second +L" ";
-		}
-		else{
-			errStr = L"The english string contains character that can't be translated.";
-			return L"";
-		}
+		//for each additional character there is a space to seperate
+		    auto itr = pData->engMorseMap.find(character);
+			if (itr != endItr){
+				result += itr->second + L" ";  
+				useTwoSpace = false;
+			}
+			else if (character == L' ')     
+			{
+				if (!useTwoSpace)
+					result += L" ";
+				else
+					result += L"  ";
+				useTwoSpace = true;
+			}
+			else        // simply skip unrecognized character
+				continue;
+			
 	}
-	//get rid of tailing space if there's more than 1 character
-	auto strSize = result.size();
-	if (strSize > 1)
-		result = result.substr(0, strSize - 1);
-
+	auto resultSize = result.size();
+	if (!useTwoSpace && resultSize > 0)
+		result = result.substr(0, resultSize - 1);
 	return result;
 }
 
-wstring morseTranslator::decodeMorse(wstring& morseStr, wstring& errStr)
+wstring morseTranslator::decodeMorse(wstring& morseStr)
 {
 	wstring result = L"";
 	auto endItr = pData->morseEngMap.end();
@@ -130,20 +141,30 @@ wstring morseTranslator::decodeMorse(wstring& morseStr, wstring& errStr)
 	{  
 		if (morseCharacter != L' ')
 		{
+			if (tempString == L" ")
+				tempString = L"";    //resetting the tempString for recording non-space characters
 			tempString += morseCharacter;
 			continue;
 		}
 		else{
-			auto itr = pData->morseEngMap.find(tempString);
-			if (itr != endItr){
-				result += itr->second;
+			if (tempString == L" ")
+			{
+				result += L" ";
 				tempString = L"";
+				continue;
 			}
-			else{
-				errStr = L"The morse string contains code that can't be translated.";
-				return L"";
-			}
-		} 
+			auto itr = pData->morseEngMap.find(tempString);
+			//as our email discussion, we are discarding invalid characters;
+			if (itr != endItr)
+				result += itr->second;
+			tempString = L" ";
+		} 	
 	}
+	//for the final character
+	auto itr = pData->morseEngMap.find(tempString);
+	if (itr != endItr)
+		result += itr->second;
+	
+
 	return result;
 }

@@ -102,11 +102,11 @@ void requestHandler::handle_post(http_request& request)
 	wstring errMsg = L"";
 	if (resource.compare(tranEnglish) == 0)
 	{
-		result = translator.encodeEnglish(inputString, errMsg);
+		result = translator.encodeEnglish(inputString);
 	}
 	else if (resource.compare(tranMorse) == 0)
 	{
-		result = translator.decodeMorse(inputString, errMsg);
+		result = translator.decodeMorse(inputString);
 	}
 	else{
 		errMsg = L"Unrecognized post request:"+resource;
