@@ -19,45 +19,15 @@ class requestHandler::privateData{
 public:
 	void handleJsonResponse(wstring errMsg, json::value& jsonObject, http_request& request);
 
-
-	//following support method is from stack overflow.
-	template<typename Out>
-	void split(const std::wstring &s, wchar_t delim, Out result) {
-		wstringstream ss;
-		ss.str(s);
-		wstring item;
-		while (std::getline(ss, item, delim)) {
-			*(result++) = item;
-		}
-	}
-
-	std::vector<std::wstring> split(const wstring &s, wchar_t delim) {
-		std::vector<std::wstring> elems;
-		split(s, delim, std::back_inserter(elems));
-		return elems;
-	}
-
-
 	//to process uri to a vector<string> so we can use in all types requests
-	vector<wstring> processUri(uri& uri){
-		auto resources = uri.resource().to_string();
-		removeAdditionalCharacter(resources);
-		transform(resources.begin(), resources.end(), resources.begin(), ::tolower);
-		return split(resources, L'/');
-	}
+	vector<wstring> processUri(uri& uri);
 
-	/*rest c++ parse json with some additional characters during testing using postman
-	* need to clean the string before use it.
-	*/
-	void removeAdditionalCharacter(wstring& str)
-	{
-		size_t s = str.size();
-		wchar_t chars[] = L"\"";
-		for (unsigned int i = 0; i < s; ++i)
-		{
-			str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
-		}
-	}
+	//following support methods is from stack overflow.
+	template<typename Out>
+	void split(const std::wstring &s, wchar_t delim, Out result);
+	std::vector<std::wstring> split(const wstring &s, wchar_t delim);
+
+
 
 };
 
@@ -150,3 +120,27 @@ void requestHandler::privateData::handleJsonResponse(wstring errMsg, json::value
 	}
 	request.reply(resp);
 }
+
+
+template<typename Out>
+void requestHandler::privateData::split(const std::wstring &s, wchar_t delim, Out result) {
+	wstringstream ss;
+	ss.str(s);
+	wstring item;
+	while (std::getline(ss, item, delim)) {
+		*(result++) = item;
+	}
+}
+
+std::vector<std::wstring> requestHandler::privateData::split(const wstring &s, wchar_t delim) {
+	std::vector<std::wstring> elems;
+	split(s, delim, std::back_inserter(elems));
+	return elems;
+}
+
+vector<wstring> requestHandler::privateData::processUri(uri& uri){
+	auto resources = uri.resource().to_string();
+	transform(resources.begin(), resources.end(), resources.begin(), ::tolower);
+	return split(resources, L'/');
+}
+

@@ -18,8 +18,8 @@ public:
 	void operator=(morseTranslator const&) = delete;
 
 	//taking a errStr to handle different translation error during encoding and decoding
-	wstring encodeEnglish(wstring& englishStr);
-	wstring decodeMorse(wstring& morseStr);
+	wstring encodeEnglish(const wstring& englishStr);
+	wstring decodeMorse(const wstring& morseStr);
 	
 	//using singleton pattern to reduce memory resource.  
 	static morseTranslator& getMorseTranslator();

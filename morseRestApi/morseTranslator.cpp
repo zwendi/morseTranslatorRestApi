@@ -14,9 +14,9 @@ public:
 	void addPair(wchar_t character, wstring morse);
 
 	/*
-	 *Since morse code is well establish standard and likelihood for change is minimal, adding 
+	 *Since Morse code is well establish standard and likelihood for change is minimal, adding 
 	 *an extra unordered_map is only taking extra O(number of characters for morse) space. By doing so 
-	 *we will have a O(1) translation for morse or english translation.
+	 *we will have a O(1) translation per morse or english character translation.
 	*/
 	unordered_map<wchar_t, wstring> engMorseMap;
 	unordered_map<wstring, wchar_t> morseEngMap;
@@ -44,7 +44,9 @@ morseTranslator::~morseTranslator()
 	}
 }
 
-
+/*Hard coding makes sense for Morse code translation since the standard is well-established and 
+* likelihood for change is very minimal. Any changes for translation require change for the hardcoded value.
+*/
 void morseTranslator::privateData::initialized()
 {
 	addPair(L'A', L".-");
@@ -97,15 +99,14 @@ void morseTranslator::privateData::addPair(wchar_t character, wstring morse)
 	morseEngMap.insert(make_pair(morse, character));
 }
 
-
-wstring morseTranslator::encodeEnglish(wstring& englishStr)
+// this function is O(n) where n is the length of englishStr
+wstring morseTranslator::encodeEnglish(const wstring& englishStr)
 {
 	wstring result = L"";
 	auto endItr = pData->engMorseMap.end();
 
-	//use this to handle special english string " "
-	bool useTwoSpace = true;
-	
+	//use this variable to handle special english string " "
+	bool useTwoSpace = true;	
 	for (auto& character : englishStr)
 	{
 		//for each additional character there is a space to seperate
@@ -124,15 +125,15 @@ wstring morseTranslator::encodeEnglish(wstring& englishStr)
 			}
 			else        // simply skip unrecognized character
 				continue;
-			
 	}
 	auto resultSize = result.size();
-	if (!useTwoSpace && resultSize > 0)
+	if (!useTwoSpace && resultSize > 0)  //last character is not space, an additional space is added.
 		result = result.substr(0, resultSize - 1);
 	return result;
 }
 
-wstring morseTranslator::decodeMorse(wstring& morseStr)
+//this function is O(n) where n is the number of morse characters
+wstring morseTranslator::decodeMorse(const wstring& morseStr)
 {
 	wstring result = L"";
 	auto endItr = pData->morseEngMap.end();
@@ -160,6 +161,7 @@ wstring morseTranslator::decodeMorse(wstring& morseStr)
 			tempString = L" ";
 		} 	
 	}
+
 	//for the final character
 	auto itr = pData->morseEngMap.find(tempString);
 	if (itr != endItr)
