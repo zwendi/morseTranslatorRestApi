@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "morseRestApi", "morseRestAp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "morseTranslatorTest", "morseTranslatorTest\morseTranslatorTest.vcxproj", "{E6E7B549-370B-45FB-9E04-804621637066}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "requestHandlerTest", "requestHandlerTest\requestHandlerTest.vcxproj", "{4D8232B0-3B97-461B-8A0D-0B7AF2CC6EA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{E6E7B549-370B-45FB-9E04-804621637066}.Debug|Win32.Build.0 = Debug|Win32
 		{E6E7B549-370B-45FB-9E04-804621637066}.Release|Win32.ActiveCfg = Release|Win32
 		{E6E7B549-370B-45FB-9E04-804621637066}.Release|Win32.Build.0 = Release|Win32
+		{4D8232B0-3B97-461B-8A0D-0B7AF2CC6EA9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4D8232B0-3B97-461B-8A0D-0B7AF2CC6EA9}.Debug|Win32.Build.0 = Debug|Win32
+		{4D8232B0-3B97-461B-8A0D-0B7AF2CC6EA9}.Release|Win32.ActiveCfg = Release|Win32
+		{4D8232B0-3B97-461B-8A0D-0B7AF2CC6EA9}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
