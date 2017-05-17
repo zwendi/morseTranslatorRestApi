@@ -113,6 +113,14 @@ namespace morseTranslatorTest
 			Assert::AreEqual(expectedStr, resultStr, L"The translation does not match expected output");
 		}
 
+		TEST_METHOD(decodeOneSpaceString)
+		{
+			wstring morseString = L" ";
+			auto resultStr = translator.decodeMorse(morseString);
+			expectedStr = L"";
+			Assert::AreEqual(expectedStr, resultStr, L"The translation does not match expected output");
+		}
+
 		TEST_METHOD(decodeMorseStringWithSpace)
 		{
 			wstring morseString = L"....  .  .-.. .-.. ---  .-- --- .-. .-..  -..   ";
