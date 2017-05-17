@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "requestHandler.h"
 #include "morseTranslator.h"
-#include <iterator>
 #include <vector>
 
 //define as constant here allow easier maintenance and changes
@@ -11,24 +10,19 @@ const int postUriSize = 2;
 const int resPosition = 1;
 
 using namespace web;
-using namespace web::http;
-using namespace std;
 
 class requestHandler::privateData{
 
 public:
 	void handleJsonResponse(wstring errMsg, json::value& jsonObject, http_request& request);
-
 	//to process uri to a vector<string> so we can use in all types requests
 	vector<wstring> processUri(uri& uri);
-
+	
 	//following support methods is from stack overflow.
 	template<typename Out>
 	void split(const std::wstring &s, wchar_t delim, Out result);
+	
 	std::vector<std::wstring> split(const wstring &s, wchar_t delim);
-
-
-
 };
 
 requestHandler::requestHandler()
@@ -56,20 +50,19 @@ void requestHandler::handle_post(http_request& request)
 		pData->handleJsonResponse(L"No uri received.", resVal, request);
 		return;
 	}
-
 	auto resources = pData->processUri(uri);
+	//if uri contains more or less resource that postUriSize
 	if (resources.size() != postUriSize)
 	{
-		pData->handleJsonResponse(L"Too many or too few resources are supply.", resVal, request);
+		pData->handleJsonResponse(L"Too many or too few resources are supplied.", resVal, request);
 		return;
 	}
-	
 	wstring resource = resources[resPosition];
-	auto body = request.extract_string();
-	wstring inputString = body.get().c_str();
+	wstring inputString = request.extract_string().get().c_str();
 	auto& translator = morseTranslator::getMorseTranslator();
 	wstring result = L"";
 	wstring errMsg = L"";
+
 	if (resource.compare(tranEnglish) == 0)
 	{
 		result = translator.encodeEnglish(inputString);
@@ -85,8 +78,6 @@ void requestHandler::handle_post(http_request& request)
 	resVal[answer] = json::value(result);
 	pData->handleJsonResponse(errMsg, resVal, request);
 	return;
-
-	
 }
 
 
@@ -104,11 +95,12 @@ void requestHandler::handle_options(http_request& request)
 
 void requestHandler::privateData::handleJsonResponse(wstring errMsg, json::value& jsonObject, http_request& request)
 {
-	json::value resVal;
 	http_response resp;
 	resp.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+	//some error happened, should sent back the error message
 	if (errMsg.size()>0)
 	{
+		json::value resVal;
 		resVal[error] = json::value(errMsg);
 		resp.set_status_code(web::http::status_codes::BadRequest);
 		resp.set_body(resVal);

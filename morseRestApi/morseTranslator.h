@@ -1,23 +1,21 @@
 #pragma once
 #include <string>
-#include <unordered_map>
-#include <memory>
 using namespace std;
 
 /*
 * design chocie: why use singelton? Since the translator is used only for translating an input english string to morse code or decode 
-* So across the entire application, we only need one such instance and that instance perform the same task.
+* So across the entire application, we only need one such instance and that instance performs the same task.
 */
 class morseTranslator
 {
 public:
 	~morseTranslator();
 
-	//effective modern c++, a delete method will provide better error message
+	//according to effective modern c++, delete methods will provide better error message
 	morseTranslator(morseTranslator const&) = delete;
 	void operator=(morseTranslator const&) = delete;
 
-	//taking a errStr to handle different translation error during encoding and decoding
+    //skipping invalid characters
 	wstring encodeEnglish(const wstring& englishStr);
 	wstring decodeMorse(const wstring& morseStr);
 	

@@ -117,7 +117,7 @@ namespace morseTranslatorTest
 		{
 			wstring morseString = L"....  .  .-.. .-.. ---  .-- --- .-. .-..  -..   ";
 			auto resultStr = translator.decodeMorse(morseString);
-			expectedStr = L"H E LLO WORL D "; // for easier to follow the test in the future
+			expectedStr = L"H E LLO WORL D "; 
 			Assert::AreEqual(expectedStr, resultStr, L"The translation does not match expected output");
 		}
 
@@ -125,7 +125,7 @@ namespace morseTranslatorTest
 		{
 			wstring morseString = L"  .... . .-.. .-.. ---  .-- --- .-. .-.. -..  ";
 			auto resultStr = translator.decodeMorse(morseString);
-			expectedStr = L" HELLO WORLD "; // for easier to follow the test in the future
+			expectedStr = L" HELLO WORLD "; 
 			Assert::AreEqual(expectedStr, resultStr, L"The translation does not match expected output");
 		}
 

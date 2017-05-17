@@ -14,8 +14,8 @@ public:
 	void addPair(wchar_t character, wstring morse);
 
 	/*
-	 *Since Morse code is well establish standard and likelihood for change is minimal, adding 
-	 *an extra unordered_map is only taking extra O(number of characters for morse) space. By doing so 
+	 *Since Morse code is well established standard and likelihood for change is minimal, adding 
+	 *an extra unordered_map is only taking extra O(number of characters for translation) space. By doing so 
 	 *we will have a O(1) translation per morse or english character translation.
 	*/
 	unordered_map<wchar_t, wstring> engMorseMap;
@@ -95,6 +95,7 @@ void morseTranslator::privateData::initialized()
 void morseTranslator::privateData::addPair(wchar_t character, wstring morse)
 {
 	engMorseMap.insert(make_pair(character, morse));
+	//unorder_map will ignore insertion if a key collision happens
 	engMorseMap.insert(make_pair(tolower(character), morse));
 	morseEngMap.insert(make_pair(morse, character));
 }
@@ -104,12 +105,11 @@ wstring morseTranslator::encodeEnglish(const wstring& englishStr)
 {
 	wstring result = L"";
 	auto endItr = pData->engMorseMap.end();
-
 	//use this variable to handle special english string " "
 	bool useTwoSpace = true;	
 	for (auto& character : englishStr)
 	{
-		//for each additional character there is a space to seperate
+		   //for each additional character there is a space to seperate
 		    auto itr = pData->engMorseMap.find(character);
 			if (itr != endItr){
 				result += itr->second + L" ";  
@@ -127,7 +127,7 @@ wstring morseTranslator::encodeEnglish(const wstring& englishStr)
 				continue;
 	}
 	auto resultSize = result.size();
-	if (!useTwoSpace && resultSize > 0)  //last character is not space, an additional space is added.
+	if (!useTwoSpace && resultSize > 0)  //if last character is not a space, an additional space is added.
 		result = result.substr(0, resultSize - 1);
 	return result;
 }
@@ -143,13 +143,14 @@ wstring morseTranslator::decodeMorse(const wstring& morseStr)
 		if (morseCharacter != L' ')
 		{
 			if (tempString == L" ")
-				tempString = L"";    //resetting the tempString for recording non-space characters
+				tempString = L"";    //resetting the tempString when translating non-space characters
 			tempString += morseCharacter;
 			continue;
 		}
 		else{
 			if (tempString == L" ")
 			{
+				//previous character is a space, we have met two spaces in a row, so a space in english should be added
 				result += L" ";
 				tempString = L"";
 				continue;
@@ -167,6 +168,5 @@ wstring morseTranslator::decodeMorse(const wstring& morseStr)
 	if (itr != endItr)
 		result += itr->second;
 	
-
 	return result;
 }

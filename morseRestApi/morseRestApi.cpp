@@ -2,13 +2,11 @@
 //
 
 #include "stdafx.h"
-#include <string>
 #include <iostream>
 #include "morseTranslator.h"
 #include "requestHandler.h"
 
 
-using namespace std;
 using namespace web::http::experimental::listener;
 
 //use string instead wstring here enable us to use remove method from standard
@@ -18,7 +16,7 @@ const wstring defaultPort = L"8080";
 int _tmain(int argc, _TCHAR* argv[])
 {
 	//For this example, a simple console is used to to get the port number
-	wcout << L"Please enter the port number you want the program listen on locally.";
+	wcout << L"Please enter the port number you want the program listen on locally:";
 	wstring address = L"http://localhost/";
 	wstring port;
 	wcin >> port;
@@ -45,7 +43,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 	}
 
-	std::wcout << L"Bye Bye." << endl;
+	wcout << L"Bye Bye." << endl;
 	listener.close();
 
 	return 0;
