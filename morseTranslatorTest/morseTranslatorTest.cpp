@@ -15,7 +15,6 @@ namespace morseTranslatorTest
 
 		TEST_METHOD(encodeNullString)
 		{
-			// TODO: Your test code here
 			wstring engString = L"";
 	        auto resultStr = translator.encodeEnglish(engString);
 			expectedStr = L""; // for easier to follow the test in the future
@@ -28,7 +27,6 @@ namespace morseTranslatorTest
 		*/
 		TEST_METHOD(encodeStringWithOnlySpaceCase)
 		{
-			// TODO: Your test code here
 			wstring engString = L" ";  
 			auto resultStr = translator.encodeEnglish(engString);
 			expectedStr = L"  "; 
@@ -42,7 +40,6 @@ namespace morseTranslatorTest
 
 		TEST_METHOD(encodeStringWithoutSpace)
 		{
-			// TODO: Your test code here
 			wstring engString = L"SOS";
 			auto resultStr = translator.encodeEnglish(engString);
 			expectedStr = L"... --- ..."; 
@@ -51,7 +48,6 @@ namespace morseTranslatorTest
 
 		TEST_METHOD(encodeStringWithUpperAndLowerCase)
 		{
-			// TODO: Your test code here
 			wstring engString = L"Hello World";
 			auto resultStr = translator.encodeEnglish(engString);
 			expectedStr = L".... . .-.. .-.. ---  .-- --- .-. .-.. -.."; 
@@ -61,7 +57,6 @@ namespace morseTranslatorTest
 
 		TEST_METHOD(encodeStringWithLeadingAndTailingSpaces)
 		{
-			// TODO: Your test code here
 			wstring engString = L" S o S ";  
 			auto resultStr = translator.encodeEnglish(engString);
 			expectedStr = L"  ...  ---  ...  "; 
@@ -77,7 +72,6 @@ namespace morseTranslatorTest
 		
 		TEST_METHOD(encodeStringWithUnrecognizedCharacter)
 		{
-			// TODO: Your test code here
 			wstring engString = L">+>@  S";  
 			auto resultStr = translator.encodeEnglish(engString);
 			expectedStr = L"    ..."; // two space in front of S should result in four spaces in morse
@@ -141,7 +135,7 @@ namespace morseTranslatorTest
 		{
 			wstring morseString = L"  ";
 			auto resultStr = translator.decodeMorse(morseString);
-			expectedStr = L" "; // for easier to follow the test in the future
+			expectedStr = L" "; 
 			Assert::AreEqual(expectedStr, resultStr, L"The translation does not match expected output");
 			morseString = L"      ";
 			expectedStr = L"   ";
