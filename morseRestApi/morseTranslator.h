@@ -15,7 +15,7 @@ public:
 	morseTranslator(morseTranslator const&) = delete;
 	void operator=(morseTranslator const&) = delete;
 
-    //skipping invalid characters
+    //skipping invalid characters, two methods required for the assignment
 	wstring encodeEnglish(const wstring& englishStr);
 	wstring decodeMorse(const wstring& morseStr);
 	
@@ -25,7 +25,7 @@ public:
 private:
 	//forbidden default constructor just taking one memory resource per program
 	morseTranslator();
-	
+
 	//hiding implementation detail, allow switching our data structure without require a recompilation on client code.
 	class privateData;
 	privateData* pData;
